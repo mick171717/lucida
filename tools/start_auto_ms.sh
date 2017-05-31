@@ -1,30 +1,35 @@
 #!/bin/bash
 
-echo "This is Lucida Service insertion script. Following each step and insert your service "
+echo "============================================="
+echo "     Lucida Micro Service Building Tools     "
+echo "          made in May 31, 2017"
+echo "============================================="
+echo ""
+
 echo "Specify your service name (e.g. musicservice)."
-printf "# Enter your service name: "
+printf "### Enter your service name: "
 read NAME
 
 echo ""
 echo "Specify the acronym of your service (e.g. MS)."
-printf "# Enter the acronym of your service: "
+printf "### Enter the acronym of your service: "
 read NAME_ACN
 
 echo ""
 echo "Specify the programming language you want to you in your programming. If C++/Java/Python, then template will be provided."
-printf "# Enter the programming language: "
+printf "### Enter the programming language: "
 read LAN
 
 echo ""
-echo "Specify the host/port information."
-printf "# Enter the host: "
+echo "Specify the host/port information. "
+printf "### Enter the host: "
 read HOST
-printf "# Enter the port: "
+printf "### Enter the port: "
 read PORT
 
 echo ""
 echo "Specify the input type of your service (text, image or text_image)"
-printf "# Enter the input type: "
+printf "### Enter the input type: "
 read INPUT
 
 python service_mongo.py $NAME $NAME_ACN $HOST $PORT $INPUT
@@ -35,11 +40,11 @@ then
 	cd ../lucida ; \
 	if [ -d $NAME ]
 	then
-		echo "error: service already exists!"
+		echo "[Error] service already exists!"
 	else
 		cp -rf template/cpp .
 		mv cpp $NAME
-		echo "Template folder is ready cpp!"
+		echo "[Info] Template folder is ready cpp!"
 	fi
 elif [ "$LAN" = "Java" -o "$LAN" = "java" ]
 then
@@ -54,10 +59,10 @@ else
 	cd ../lucida ; \
 	if [ -d $NAME ]
 	then
-		echo "error: service already exists!"
+		echo "[Error] service already exists!"
 	else
 		mkdir $NAME
-		echo "Template folder is ready!"
+		echo "[Info] Template folder is ready!"
 	fi
 fi
 
