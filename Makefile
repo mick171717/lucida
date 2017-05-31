@@ -36,3 +36,6 @@ clean_all_service:
 
 clean_all_tools:
 	cd tools && make clean
+
+automatic_ms:
+	cd tools && bash start_auto_ms.sh
