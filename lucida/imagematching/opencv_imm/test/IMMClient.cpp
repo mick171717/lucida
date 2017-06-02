@@ -17,7 +17,6 @@
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/path.hpp"
 #include <folly/init/Init.h>
-#include "Parser.h"
 
 using namespace folly;
 using namespace apache::thrift;
