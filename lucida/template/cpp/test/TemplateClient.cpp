@@ -32,25 +32,22 @@ DEFINE_string(hostname,
 		"Hostname of the server (default: localhost)");
 
 int main(int argc, char* argv[]) {
-	folly::init(&argc, &argv);
-	EventBase event_base;
-
 	// Initialize MongoDB C++ driver.
 	mongo::client::initialize();
 	mongo::DBClientConnection conn;
 	string mongo_addr;
 	if (const char* env_p = getenv("MONGO_PORT_27017_TCP_ADDR")) {
-		print("MongoDB: " << env_p);
+		cout << "MongoDB: " << env_p << endl;
 		mongo_addr = env_p;
 	} else {
-		print("MongoDB: localhost");
+		cout << "MongoDB: localhost" << endl;
 		mongo_addr = "localhost";
 	}
 	conn.connect(mongo_addr);
-	print("Connection is ok");
+	cout << "Connection is ok" << endl;
 	// TODO: change your service name
 	auto_ptr<mongo::DBClientCursor> cursor = conn.query(
-			"lucida.service_info", MONGO_QUERY("name" << "yourservicename"));
+			"lucida.service_info", MONGO_QUERY("name" << "yourservice"));
 	BSONObj q;
 	int port = 0;
 	while (cursor->more()) {
@@ -58,6 +55,14 @@ int main(int argc, char* argv[]) {
 		string port_str = q.getField("port").String();
 		port = atoi(port_str.c_str());
 	}
+
+	folly::init(&argc, &argv);
+	EventBase event_base;
+	std::shared_ptr<apache::thrift::async::TAsyncSocket> socket_t(
+			TAsyncSocket::newSocket(&event_base, FLAGS_hostname, port));
+	LucidaServiceAsyncClient client(
+			std::unique_ptr<HeaderClientChannel, DelayedDestruction::Destructor>(
+					new HeaderClientChannel(socket_t)));
   
 	// Infer.
 	QuerySpec query_spec;

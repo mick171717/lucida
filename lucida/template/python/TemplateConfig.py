@@ -3,25 +3,19 @@ This a template for how to add your own microservice into Lucida interface
 """
 
 # Server Port number (necessary for every microservice server)
-import ConfigParser, sys
+import ConfigParser, sys, os
+from pymongo import *
 
-class FakeSecHead(object):
-    def __init__(self, fp):
-        self.fp = fp
-        self.sechead = '[asection]\n'
+mongodb_addr = os.environ.get('MONGO_PORT_27017_TCP_ADDR')
+if mongodb_addr:
+    print('MongoDB: ' + mongodb_addr)
+    db = MongoClient(mongodb_addr, 27017).lucida
+else:
+    print('MongoDb: localhost')
+    db = MongoClient().lucida
 
-    def readline(self):
-        if self.sechead:
-            try: 
-                return self.sechead
-            finally: 
-                self.sechead = None
-        else: 
-            return self.fp.readline()
-
-cp = ConfigParser.SafeConfigParser()
-cp.readfp(FakeSecHead(open("../../config.properties")))
-port_dic = dict(cp.items('asection'))
-PORT = int(port_dic['xxx_port'])
+collection = db.service_info
+result = collection.find_one({"name" : "yourservice"})
+PORT = int(result["port"])
 
 # TODO: Other configuration for your own service

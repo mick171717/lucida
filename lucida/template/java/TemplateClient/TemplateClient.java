@@ -13,6 +13,15 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
+// Mongodb java libraries
+import com.mongodb.Cursor;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.BasicDBObject;
+
 //Generated code
 import thrift.*;
 
@@ -22,17 +31,20 @@ import thrift.*;
 public class TemplateClient {
 	public static void main(String [] args) 
 			throws IOException{
-		// Collect the port number.
-		Properties port_cfg = new Properties();
-		InputStream input = new FileInputStream("../../config.properties");
-		port_cfg.load(input);
-		String port_str = port_cfg.getProperty("XXX_PORT");
-		Integer port = Integer.valueOf(port_str);
-		if (args.length == 1) {
-			port = Integer.parseInt(args[0]);
-		} else {
-			System.out.println("Using default port for Template Client: " + port);
+		// Get the port ID from Mongodb
+		String mongo_addr = "localhost";
+		if (System.getenv("MONGO_PORT_27017_TCP_ADDR") != null) {
+			mongo_addr = System.getenv("MONGO_PORT_27017_TCP_ADDR");
 		}
+		MongoClient mongoClient = new MongoClient(mongo_addr, 27017);
+		DB db = mongoClient.getDB("lucida");
+		DBCollection coll = db.getCollection("service_info");
+		// TODO: change your service name
+		BasicDBObject query = new BasicDBObject("name", "yourservice");
+		DBCursor cursor = coll.find(query);
+		String port_str = cursor.next().get("port").toString();
+		mongoClient.close();
+		Integer port = Integer.valueOf(port_str);
 
 		// Query.
 		// TODO: Adding your own sample query

@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
 	print("Connection is ok");
 	// TODO: change your service name
 	auto_ptr<DBClientCursor> cursor = conn.query(
-			"lucida.service_info", MONGO_QUERY("name" << "yourservicename"));
+			"lucida.service_info", MONGO_QUERY("name" << "yourservice"));
 	BSONObj p;
 	int port = 0;
 	while (cursor->more()) {

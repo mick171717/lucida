@@ -49,11 +49,27 @@ then
 elif [ "$LAN" = "Java" -o "$LAN" = "java" ]
 then
 	# do copy template folder of java to lucida
-	echo "Template folder is ready!"
+	cd ../lucida ; \
+	if [ -d $NAME ]
+	then
+		echo "[Error] service already exists!"
+	else
+		cp -rf template/java .
+		mv java $NAME
+		echo "[Info] Template folder is ready java!"
+	fi
 elif [ "$LAN" = "Python" -o "$LAN" = "python" ]
 then
 	# do copy template folder of python to lucida
-	echo "Template folder is ready!"
+	cd ../lucida ; \
+	if [ -d $NAME ]
+	then
+		echo "[Error] service already exists!"
+	else
+		cp -rf template/python .
+		mv python $NAME
+		echo "[Info] Template folder is ready python!"
+	fi
 else
 	# create an empty folder
 	cd ../lucida ; \
